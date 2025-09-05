@@ -9,7 +9,7 @@ export type EmployeeDto = {
 export type Employee = {
     firstName: string,
     lastName: string,
-    id: string,
+    _id: string,
     table_num: string
     hour_salary?:number,
     hash: string,
@@ -22,4 +22,9 @@ export type SavedFiredEmployee = {
     id: string,
     table_num:string
     fireDate?:string,
+}
+
+export type UpdateEmployeeDto = {
+    firstName: string,
+    lastName: string,
 }
