@@ -43,9 +43,8 @@ class AccountServiceMongoImpl implements AccountService {
     async setRole(id: string, newRole: string): Promise<Employee> {
         const emp = await this.getEmployeeById(id)
         const role = checkRole(newRole);
-        emp.roles.push(role);
         const updated = await EmployeeModel.findOneAndUpdate({id}, {
-            $set: {roles: emp.roles}
+            $set: {roles: newRole}
         }, {new: true}).exec();
         if (!updated) throw new HttpError(500, "Employee updating failed!");
         return updated as Employee

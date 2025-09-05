@@ -4,6 +4,8 @@ import {Roles} from "./Roles.js";
 import {v4 as uuidv4} from 'uuid';
 import {HttpError} from "../errorHandler/HttpError.js";
 import {FiredEmployeeModel} from "../model/EmployeeMongoModels.js";
+
+
 function generateTabNumber() {
     return uuidv4();
 }
@@ -16,7 +18,7 @@ export const convertEmployeeDtoToEmployee = (dto:EmployeeDto) => {
         _id: dto.id,
         hash: bcrypt.hashSync(dto.password, 10),
         table_num: generateTabNumber(),
-        roles: [Roles.CREW]
+        roles: Roles.CREW
     }
 
     return employee;
@@ -32,7 +34,7 @@ export const convertEmployeeToFiredEmployee = (emp:Employee) =>{
         fireDate: new Date().toDateString(),
         firstName: emp.firstName,
         lastName: emp.lastName,
-        id: emp._id,
+        _id: emp._id,
         table_num: emp.table_num
     }
     return fired;

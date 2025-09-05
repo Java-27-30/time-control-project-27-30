@@ -10,17 +10,17 @@ export type Employee = {
     firstName: string,
     lastName: string,
     _id: string,
-    table_num: string
-    hour_salary?:number,
+    table_num: string,
+    // hour_salary?:number,
     hash: string,
-    roles: Roles[]
+    roles: Roles
 }
 
 export type SavedFiredEmployee = {
     firstName: string,
     lastName: string,
-    id: string,
-    table_num:string
+    _id: string,
+    table_num:string,
     fireDate?:string,
 }
 
