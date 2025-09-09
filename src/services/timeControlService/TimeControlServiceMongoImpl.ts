@@ -1,0 +1,70 @@
+import {TimeControlService} from "./TimeControlService.js";
+import {CrewShiftType, TabNumTimeType} from "../../model/Shift.js";
+import {ShiftModel} from "../../model/ShiftMongoModels.js";
+import {HttpError} from "../../errorHandler/HttpError.js";
+import {configuration} from "../../config/timeControlConfig.js";
+import {generateShiftId, getMonthHours} from "../../utils/tools.js";
+import {startShift} from "../../controllers/timeController.js";
+
+export class TimeControlServiceMongoImpl implements TimeControlService {
+
+    async startShift(tabNum: string): Promise<TabNumTimeType> {
+
+        let monthHours = 0;
+        const currentTime = new Date().getTime();
+        const shifts = await ShiftModel.find({table_num:tabNum}).exec();
+
+        if(shifts.length !== 0){
+            const lastShift = shifts[shifts.length -  1];
+
+            if(lastShift.finishShift == null) throw new HttpError(409, "Previous shift not closed");
+
+            // if(currentTime - lastShift.finishShift < (configuration.minTimeBetweenShifts * 1000 * 3600))
+            //     throw new HttpError(409, "Shifts too close");
+
+            monthHours = getMonthHours(shifts as unknown as CrewShiftType[])
+        }
+
+           const newShift:CrewShiftType = {
+                breaks: 0,
+                finishShift: null,
+                monthHours,
+                shiftDuration: 0,
+                _id: generateShiftId(),
+                startShift: currentTime,
+                table_num: tabNum,
+                сorrect: null
+            }
+
+        const newShiftDoc = new ShiftModel(newShift);
+        await newShiftDoc.save();
+        return {tabNum, time: new Date(currentTime).toTimeString()}
+    }
+
+    async finishShift(tabNum: string): Promise<TabNumTimeType> {
+        const currentTime = new Date().getTime();
+        const shift = await ShiftModel.findOneAndUpdate({table_num: tabNum, finishShift:null},
+            [{$set: {finishShift: currentTime,
+                shiftDuration: {$subtract: [currentTime,'$startShift']}}}
+                ], {new: true}
+            ).exec();
+        console.log(shift);
+        if(!shift) throw new HttpError(409, "Opened shift not found")
+       return {tabNum, time: new Date(currentTime).toTimeString()}
+    }
+
+    getCurrentShiftStaff(): Promise<CrewShiftType[]> {
+        return Promise.resolve([]);
+    }
+
+    correctShift(tabNumCrew: string, tabNumMng: string, start: string, finish: string, date: string): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
+    setBreak(tabNum: string, breakDur: number): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
+}
+
+export const timeControlServiceImpl = new TimeControlServiceMongoImpl();

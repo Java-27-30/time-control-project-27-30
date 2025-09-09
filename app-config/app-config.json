@@ -16,6 +16,6 @@
     "PATCH/accounts/password",
     "PATCH/accounts"
   ],
-  "timeWindowMs": 60000,
+  "minTimeBetweenShifts": 8,
   "requestLimit": 3
 }

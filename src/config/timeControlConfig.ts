@@ -12,7 +12,7 @@ export interface AppConfig {
         secret:string,
         exp:string|number
     },
-    timeWindowMs:number,
+    minTimeBetweenShifts:number,
     requestLimit:number
 }
 dotenv.config();

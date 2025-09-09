@@ -1,8 +1,8 @@
 import {AccountService} from "./AccountService.js";
-import {Employee, EmployeeDto, SavedFiredEmployee, UpdateEmployeeDto} from "../model/Employee.js";
-import {EmployeeModel, FiredEmployeeModel} from "../model/EmployeeMongoModels.js";
-import {HttpError} from "../errorHandler/HttpError.js";
-import {checkFiredEmployees, checkRole, convertEmployeeToFiredEmployee} from "../utils/tools.js";
+import {Employee, EmployeeDto, SavedFiredEmployee, UpdateEmployeeDto} from "../../model/Employee.js";
+import {EmployeeModel, FiredEmployeeModel} from "../../model/EmployeeMongoModels.js";
+import {HttpError} from "../../errorHandler/HttpError.js";
+import {checkFiredEmployees, checkRole, convertEmployeeToFiredEmployee} from "../../utils/tools.js";
 import bcrypt from "bcrypt";
 
 class AccountServiceMongoImpl implements AccountService {
@@ -71,6 +71,12 @@ class AccountServiceMongoImpl implements AccountService {
             EmployeeModel.countDocuments()
         ]);
         return employees;
+    }
+
+    async getEmployeeByTabNum(tabNum: string) {
+        const emp = await EmployeeModel.findOne({table_num: tabNum})
+        if(!emp) throw new HttpError(404, `Employee with table number: ${tabNum} not found`)
+    return emp as Employee;
     }
 }
 export const accountServiceMongo = new AccountServiceMongoImpl();

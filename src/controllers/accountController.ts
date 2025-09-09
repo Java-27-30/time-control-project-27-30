@@ -1,7 +1,7 @@
 import {NextFunction, Response, Request} from "express";
 import {Employee, EmployeeDto, UpdateEmployeeDto} from "../model/Employee.js";
 import {checkRole, convertEmployeeDtoToEmployee} from "../utils/tools.js";
-import {accountServiceMongo} from "../services/AccountServiceMongoImpl.js";
+import {accountServiceMongo} from "../services/accountingService/AccountServiceMongoImpl.js";
 import {HttpError} from "../errorHandler/HttpError.js";
 
 const service = accountServiceMongo;

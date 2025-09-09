@@ -4,6 +4,7 @@ import {Roles} from "./Roles.js";
 import {v4 as uuidv4} from 'uuid';
 import {HttpError} from "../errorHandler/HttpError.js";
 import {FiredEmployeeModel} from "../model/EmployeeMongoModels.js";
+import {CrewShiftType} from "../model/Shift.js";
 
 
 function generateTabNumber() {
@@ -44,3 +45,10 @@ export const checkRole = (role:string) => {
     if(!newRole) throw new HttpError(400, "Wrong role!");
     return newRole;
 }
+
+export const getMonthHours = (shifts: CrewShiftType[]) => {
+    return shifts.map(item => item.shiftDuration).reduce((acc, item) => acc+item, 0);
+}
+
+export const generateShiftId = () =>
+    Math.trunc(Math.random()*10000) + 1
