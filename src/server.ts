@@ -8,10 +8,12 @@ import {accountRouter} from "./routes/accountRouter.js";
 
 export const launchServer = () => {
 
+
     const app = express();
     app.listen(configuration.port, () => {
         console.log(`Server runs at http://localhost:${configuration.port}`)
         const logStream = fs.createWriteStream('access.log', {flags:'a'});
+        const errorStream = fs.createWriteStream('error.log', {flags: 'a'});
        //==============SecurityMiddleware==========
 
         //=============Middlewares================
@@ -24,6 +26,6 @@ export const launchServer = () => {
 
 
         //===============ErrorHandler==============
-        app.use(errorHandler)
+        app.use(errorHandler(errorStream))
     })
 }
