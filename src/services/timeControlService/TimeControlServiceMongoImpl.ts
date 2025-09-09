@@ -5,6 +5,7 @@ import {HttpError} from "../../errorHandler/HttpError.js";
 import {configuration} from "../../config/timeControlConfig.js";
 import {generateShiftId, getMonthHours} from "../../utils/tools.js";
 import {startShift} from "../../controllers/timeController.js";
+import {logger} from "../../Logger/winston.js";
 
 export class TimeControlServiceMongoImpl implements TimeControlService {
 
@@ -17,7 +18,11 @@ export class TimeControlServiceMongoImpl implements TimeControlService {
         if(shifts.length !== 0){
             const lastShift = shifts[shifts.length -  1];
 
-            if(lastShift.finishShift == null) throw new HttpError(409, "Previous shift not closed");
+            if(lastShift.finishShift == null){
+                logger.error(`${new Date().toISOString()} => Previous shift not closed, 409 Conflict`);
+                throw new HttpError(409, "Previous shift not closed");
+
+            }
 
             // if(currentTime - lastShift.finishShift < (configuration.minTimeBetweenShifts * 1000 * 3600))
             //     throw new HttpError(409, "Shifts too close");

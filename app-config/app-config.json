@@ -17,5 +17,5 @@
     "PATCH/accounts"
   ],
   "minTimeBetweenShifts": 8,
-  "requestLimit": 3
+  "logLevel": "info"
 }

@@ -13,7 +13,7 @@ export interface AppConfig {
         exp:string|number
     },
     minTimeBetweenShifts:number,
-    requestLimit:number
+    logLevel: string
 }
 dotenv.config();
 
